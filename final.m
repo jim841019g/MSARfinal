@@ -22,7 +22,7 @@ function varargout = final(varargin)
 
 % Edit the above text to modify the response to help final
 
-% Last Modified by GUIDE v2.5 26-Jun-2016 22:48:43
+% Last Modified by GUIDE v2.5 27-Jun-2016 01:36:14
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -44,6 +44,8 @@ end
 % End initialization code - DO NOT EDIT
 
 
+
+
 % --- Executes just before final is made visible.
 function final_OpeningFcn(hObject, eventdata, handles, varargin)
 % This function has no output args, see OutputFcn.
@@ -63,7 +65,7 @@ guidata(hObject, handles);
 
 
 % play button 
-imrawPlay=imread('play-button.jpg');
+imrawPlay=imread('image/play-button.jpg');
 
 set(handles.play_test,'unit','pixel');
 pos1=get(handles.play_test,'position');
@@ -76,7 +78,7 @@ imfit2=imresize(imrawPlay,[pos2(end) pos2(end-1)]);
 set(handles.play_sample,'Cdata',imfit2);
 
 % play button
-imrawPlay=imread('record-button.jpg');
+imrawPlay=imread('image/record-button.jpg');
 
 set(handles.record_test,'unit','pixel');
 pos3=get(handles.record_test,'position');
@@ -90,7 +92,7 @@ set(handles.record_sample,'Cdata',imfit4);
 
 % background
 
-backgroundImage1 = importdata('Music-wallpaper.jpg');
+backgroundImage1 = importdata('image/Music-wallpaper.jpg');
 axes(handles.axes2);
 image(backgroundImage1);
 axis off;
@@ -105,19 +107,35 @@ axis off;
 
 loadSampleFolder(handles);
 
+loadSongFolder(handles);
+
+
+
 
 
 % pop menu sample
 function loadSampleFolder(handles)
-TestFiles = dir('sample');
-TestList = {};
+TestFiles = dir('sample_all');
+TestList = {'Original'};
 for i = 1:length(TestFiles)
     filename = TestFiles(i).name;
-    if ~strcmp(filename,'.') && ~strcmp(filename,'..') && ~strcmp(filename,'.DS_Store')
+    if ~strcmp(filename,'.') && ~strcmp(filename,'..') && ~strcmp(filename,'.DS_Store') 
         TestList = [TestList ; filename];
     end
 end
 set(handles.menu_sample,'string',TestList);
+
+% pop menu song_record
+function loadSongFolder(handles)
+TestFiles = dir('song_record');
+TestList = {};
+for i = 1:length(TestFiles)
+    filename = TestFiles(i).name;
+    if ~strcmp(filename,'.') && ~strcmp(filename,'..') && ~strcmp(filename,'.DS_Store') 
+        TestList = [TestList ; filename];
+    end
+end
+set(handles.menu_test,'string',TestList);
 
 
 
@@ -138,7 +156,18 @@ function record_sample_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-display(handles.sample_name);
+display(handles.instrument);
+instrument = handles.instrument;
+
+set(handles.text_show,'string','Recording');
+samplerecord(instrument);
+set(handles.text_show,'string','Finished');
+
+getsample(instrument);
+
+loadSampleFolder(handles);
+
+
 
 
 
@@ -155,6 +184,10 @@ function play_sample_Callback(hObject, eventdata, handles)
 
 % play all sample data 
 
+instrument = handles.item_selected;
+sampleplay(instrument);
+
+
 
 
 
@@ -166,6 +199,18 @@ function menu_sample_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns menu_sample contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from menu_sample
+
+items = get(hObject,'String');
+index_selected = get(hObject,'Value');
+item_selected = items{index_selected};
+display(item_selected);
+
+handles.item_selected = item_selected;
+guidata(hObject,handles);
+
+%set(handles.text2,'string',item_selected);
+
+
 
 
 % --- Executes during object creation, after setting all properties.
@@ -187,11 +232,34 @@ function record_test_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 
+song_record = handles.song_record;
+duration = handles.duration;
+
+set(handles.text_show,'string','Recording');
+soundrecord(song_record,duration);
+set(handles.text_show,'string','Finished');
+
+loadSongFolder(handles);
+
+
+
+
+
 % --- Executes on button press in play_test.
 function play_test_Callback(hObject, eventdata, handles)
 % hObject    handle to play_test (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+instrument = handles.item_selected;
+song = handles.song_selected;
+
+if strcmp('Original',instrument)
+    [y,fs] = audioread(['song_record/',song]);
+    sound(y,fs);
+else
+    main(instrument,song);
+end
 
 
 
@@ -206,6 +274,14 @@ function menu_test_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns menu_test contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from menu_test
+
+items = get(hObject,'String');
+index_selected = get(hObject,'Value');
+song_selected = items{index_selected};
+display(song_selected);
+
+handles.song_selected = song_selected;
+guidata(hObject,handles);
 
 
 % --- Executes during object creation, after setting all properties.
@@ -227,12 +303,19 @@ function button_C_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+item_selected = handles.item_selected;
+piano(['sample_all/',item_selected,'/C.wav']);
+
+
 
 % --- Executes on button press in button_D.
 function button_D_Callback(hObject, eventdata, handles)
 % hObject    handle to button_D (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+item_selected = handles.item_selected;
+piano(['sample_all/',item_selected,'/D.wav']);
 
 
 % --- Executes on button press in button_E.
@@ -241,12 +324,18 @@ function button_E_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+item_selected = handles.item_selected;
+piano(['sample_all/',item_selected,'/E.wav']);
+
 
 % --- Executes on button press in button_F.
 function button_F_Callback(hObject, eventdata, handles)
 % hObject    handle to button_F (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+item_selected = handles.item_selected;
+piano(['sample_all/',item_selected,'/F.wav']);
 
 
 % --- Executes on button press in button_G.
@@ -255,13 +344,19 @@ function button_G_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+item_selected = handles.item_selected;
+piano(['sample_all/',item_selected,'/G.wav']);
+
 
 % --- Executes on button press in button_A.
 function button_A_Callback(hObject, eventdata, handles)
 % hObject    handle to button_A (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-disp('³¢«a§»¦n«Ó')
+
+item_selected = handles.item_selected;
+piano(['sample_all/',item_selected,'/A.wav']);
+
 
 % --- Executes on button press in button_B.
 function button_B_Callback(hObject, eventdata, handles)
@@ -269,11 +364,18 @@ function button_B_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+item_selected = handles.item_selected;
+piano(['sample_all/',item_selected,'/B.wav']);
+
+
 % --- Executes on button press in button_C_upper.
 function button_C_upper_Callback(hObject, eventdata, handles)
 % hObject    handle to button_C_upper (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+item_selected = handles.item_selected;
+piano(['sample_all/',item_selected,'/C_upper.wav']);
 
 
 
@@ -327,12 +429,19 @@ function button_C_s_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+item_selected = handles.item_selected;
+piano(['sample_all/',item_selected,'/#C.wav']);
+
 
 % --- Executes on button press in button_D_s.
 function button_D_s_Callback(hObject, eventdata, handles)
 % hObject    handle to button_D_s (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+item_selected = handles.item_selected;
+piano(['sample_all/',item_selected,'/#D.wav']);
+
 
 
 % --- Executes on button press in button_F_s.
@@ -341,6 +450,10 @@ function button_F_s_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+item_selected = handles.item_selected;
+piano(['sample_all/',item_selected,'/#F.wav']);
+
+
 
 % --- Executes on button press in button_G_s.
 function button_G_s_Callback(hObject, eventdata, handles)
@@ -348,12 +461,20 @@ function button_G_s_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+item_selected = handles.item_selected;
+piano(['sample_all/',item_selected,'/#G.wav']);
+
+
 
 % --- Executes on button press in button_A_s.
 function button_A_s_Callback(hObject, eventdata, handles)
 % hObject    handle to button_A_s (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+item_selected = handles.item_selected;
+piano(['sample_all/',item_selected,'/#A.wav']);
+
 
 
 % --- Executes on button press in pushbutton23.
@@ -373,7 +494,7 @@ function edit_sample_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of edit_sample as a double
 
 input = get(hObject,'String');
-handles.sample_name = input;
+handles.instrument = input;
 guidata(hObject,handles);
 
 % --- Executes during object creation, after setting all properties.
@@ -399,13 +520,41 @@ function edit_test_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of edit_test as a double
 
 input = get(hObject,'String');
-handles.test_name = input;
+handles.song_record = input;
 guidata(hObject,handles);
 
 
 % --- Executes during object creation, after setting all properties.
 function edit_test_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to edit_test (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function edit_duration_Callback(hObject, eventdata, handles)
+% hObject    handle to edit_duration (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit_duration as text
+%        str2double(get(hObject,'String')) returns contents of edit_duration as a double
+
+input = str2double(get(hObject,'String'));
+handles.duration = input;
+display(input);
+guidata(hObject,handles);
+
+
+% --- Executes during object creation, after setting all properties.
+function edit_duration_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit_duration (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 

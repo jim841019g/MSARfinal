@@ -1,12 +1,12 @@
 function getsample(instrument);
     wav = '.wav';
-    name = [instrument,wav];
+    name = ['sample/',instrument,wav];
     [y,fs] = audioread(name);
     a = floor(length(y)/2);
     sample = y(a:a+60000,1);
     samp = '_samp';
     sampname = [instrument,samp,wav];
-    audiowrite(sampname,sample,fs);
+    % audiowrite(sampname,sample,fs);
     pitch = mod(findpitch(sample,fs),12);
     modifyC = turnpitch2wave(sample,0,pitch,20000);
     modifyC1 = turnpitch2wave(sample,1,pitch,20000);
@@ -21,6 +21,7 @@ function getsample(instrument);
     modifyA1 = turnpitch2wave(sample,10,pitch,20000);
     modifyB = turnpitch2wave(sample,11,pitch,20000);
     modifyC2 = turnpitch2wave(sample,12,pitch,20000);
+    cd sample_all/;
     mkdir(instrument);
     cd (instrument)
     audiowrite(sampname,sample,fs);    
@@ -50,4 +51,5 @@ function getsample(instrument);
     audiowrite(name,modifyB,fs);
     name = 'C_upper.wav';
     audiowrite(name,modifyC2,fs);
+    cd ..;
     cd ..;
