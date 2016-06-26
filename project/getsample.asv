@@ -1,0 +1,13 @@
+function getsample(instrument);
+    wav = '.wav';
+    name = [instrument,wav];
+    [y,fs] = audioread(name);
+    a = floor(length(y)/2);
+    sample = y(a:a+40000,1);
+    samp = '_samp';
+    sampname = [instrument,samp,wav];
+    audiowrite(sampname,sample,fs);
+    mkdir(instrument);
+    audiowrite(sampname,sample,fs);
+    pitch = mod(findpitch(y,fs),12);
+    

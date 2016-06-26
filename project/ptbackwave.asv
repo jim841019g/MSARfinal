@@ -24,9 +24,6 @@ for i = 1:length(pitch)
     t = 0:length(temp)-1;
     temp2 = temp .* sin(pi*t/length(temp));
     
-  else
-      temp(framelength)=0;
-  end
-  wave = [wave,temp]; 
+  wave = [wave,temp];   
        
 end

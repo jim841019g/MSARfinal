@@ -1,4 +1,4 @@
-function pitch=myPt(y,fs, ptOpt, showPlot);
+function [pitch,volume]=myPt(y,fs, ptOpt, showPlot);
 % myPt: Pitch tracking from audio
 %
 %	Usage:
