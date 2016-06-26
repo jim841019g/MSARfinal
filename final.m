@@ -22,7 +22,7 @@ function varargout = final(varargin)
 
 % Edit the above text to modify the response to help final
 
-% Last Modified by GUIDE v2.5 26-Jun-2016 22:31:41
+% Last Modified by GUIDE v2.5 26-Jun-2016 22:48:43
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -303,43 +303,55 @@ switch eventdata.Key
     button_B_Callback(handles.button_B,[],handles);
   case 'k'
     button_C_upper_Callback(handles.button_C_upper,[],handles);
+    
+  case 'w'
+    button_C_s_Callback(handles.button_C,[],handles);
+  case 'e'
+    button_D_s_Callback(handles.button_D,[],handles);
+    
+  case 't'
+    button_F_s_Callback(handles.button_F,[],handles);
+  case 'y'
+    button_G_s_Callback(handles.button_G,[],handles);
+  case 'u'
+    button_A_s_Callback(handles.button_A,[],handles);
 end
 
 
 
 
 
-% --- Executes on button press in pushbutton17.
-function pushbutton17_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton17 (see GCBO)
+% --- Executes on button press in button_C_s.
+function button_C_s_Callback(hObject, eventdata, handles)
+% hObject    handle to button_C_s (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
 
-% --- Executes on button press in pushbutton19.
-function pushbutton19_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton19 (see GCBO)
+% --- Executes on button press in button_D_s.
+function button_D_s_Callback(hObject, eventdata, handles)
+% hObject    handle to button_D_s (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
 
-% --- Executes on button press in pushbutton20.
-function pushbutton20_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton20 (see GCBO)
+% --- Executes on button press in button_F_s.
+function button_F_s_Callback(hObject, eventdata, handles)
+% hObject    handle to button_F_s (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
 
-% --- Executes on button press in pushbutton21.
-function pushbutton21_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton21 (see GCBO)
+% --- Executes on button press in button_G_s.
+function button_G_s_Callback(hObject, eventdata, handles)
+% hObject    handle to button_G_s (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
 
-% --- Executes on button press in pushbutton22.
-function pushbutton22_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton22 (see GCBO)
+% --- Executes on button press in button_A_s.
+function button_A_s_Callback(hObject, eventdata, handles)
+% hObject    handle to button_A_s (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
