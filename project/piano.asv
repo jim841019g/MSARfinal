@@ -1,0 +1,3 @@
+function piano(name)
+    p = [pwd,'\',name];
+    [y,fs] = audioread
